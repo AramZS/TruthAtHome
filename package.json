@@ -1,0 +1,88 @@
+{
+	"name": "TruthAtHome",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "",
+	"author": "Aram Zucker-Scharff <aramzs@hacktext.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/supertest": "^2.0.3",
+		"awesome-typescript-loader": "^3.3.0",
+		"concurrently": "^3.5.0",
+		"eslint": "^4.10.0",
+		"eslint-config-prettier": "^2.7.0",
+		"eslint-plugin-prettier": "^2.3.1",
+		"husky": "^0.14.3",
+		"jest": "^21.2.1",
+		"lint-staged": "^4.3.0",
+		"nodemon": "^1.12.1",
+		"npm-run-all": "^4.1.2",
+		"prettier": "^1.8.1",
+		"supertest": "^3.0.0",
+		"ts-jest": "^21.1.4",
+		"ts-loader": "^3.1.1",
+		"tslint": "^5.8.0",
+		"typescript": "^2.6.1",
+		"webpack": "^3.8.1"
+	},
+	"scripts": {
+		"commitmsg": "node ./scripts/commit-msg",
+		"clean": "rm -fr build",
+		"precommit": "lint-staged && npm test",
+		"fmt:prettier": "prettier --write --single-quote --use-tabs --tab-width 4",
+		"lint": "run-p lint:js",
+		"lint:eslint": "eslint --ignore-path .gitignore",
+		"lint:js": "npm run lint:eslint -- .",
+		"lint:tslint": "tslint --config tsconfig.json --exclude .gitignore",
+		"start": "npm run build && npm run watch",
+		"start-local": "npm run build-local && npm run watch",
+		"build-local": "npm run fmt:prettier src/*/*.ts && npm run build-ts && npm run tslint",
+		"build": "npm run build-ts",
+		"serve": "nodemon build/server.js",
+		"watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
+		"test": "jest --forceExit",
+		"build-ts": "webpack",
+		"watch-ts": "webpack --watch",
+		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"debug": "npm run build && npm run watch-debug",
+		"serve-debug": "nodemon --inspect build/server.js",
+		"watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\""
+	},
+	"lint-staged": {
+		"**/!(*.min).js": [
+			"fmt:prettier",
+			"lint:tslint",
+			"git add"
+		]
+	},
+	"dependencies": {
+		"@types/async": "^2.0.45",
+		"@types/express": "^4.0.39",
+		"@types/jest": "^21.1.5",
+		"@types/node": "^8.0.50",
+		"@types/request": "^2.0.8",
+		"async": "^2.6.0",
+		"body-parser": "^1.18.2",
+		"express": "^4.16.2",
+		"express-validator": "^4.3.0",
+		"morgan": "^1.9.0",
+		"request": "^2.83.0",
+		"webpack-node-externals": "^1.6.0"
+	},
+	"jest": {
+		"globals": {
+			"ts-jest": "tsconfig.json"
+		},
+		"moduleFileExtensions": [
+			"ts",
+			"js"
+		],
+		"transform": {
+			"^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+		},
+		"testMatch": [
+			"**/test/**/*.test.(ts|js)"
+		],
+		"testEnvironment": "node"
+	}
+}

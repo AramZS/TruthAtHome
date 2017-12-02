@@ -1,0 +1,31 @@
+{
+	"defaultSeverity": "error",
+	"extends": ["tslint:recommended"],
+	"rules": {
+		"indent": [true, "tabs"],
+		"trailing-comma": [true, "never"],
+		"quotemark": [true, "single"],
+		"semicolon": [true, "always", "ignore-interfaces"],
+		"no-console": ["warn"],
+		"object-literal-sort-keys": false,
+		"interface-name": [true, "never-prefix"]
+	},
+	"jsRules": {
+		"indent": [true, "tabs"],
+		"trailing-comma": [true, "never"],
+		"quotemark": [true, "single"],
+		"semicolon": [true, "always", "ignore-interfaces"],
+		"linebreak-style": ["error", "unix"],
+		"semi": ["error", "always"],
+		"no-console": ["warn"],
+		"no-inner-declarations": ["warn"],
+		"object-literal-sort-keys": false
+	},
+	"linterOptions": {
+		"exclude": ["**/node_modules/**"]
+	},
+	"globals": {
+		"require": true,
+		"module": true
+	}
+}
