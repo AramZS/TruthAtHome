@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import * as request from 'request';
 import { RequestResponse } from 'request';
 
-const validate = (requestSet: <any>) => {
+const validate = (requestSet: any) => {
 	if (!requestSet.hasOwnProperty('format')){
 		requestSet.format = 'json';
 	}

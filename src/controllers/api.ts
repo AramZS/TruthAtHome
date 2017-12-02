@@ -18,7 +18,7 @@ export let getApi = (req: Request, res: Response) => {
 			routes: {
 				'/passthrough': {
 					methods: ['GET', 'POST'],
-					description: 'Neutral endpoint that will pass your requests to the Facebook API'
+					description: 'Neutral endpoint that will pass your requests to the Facebook API',
 					args: {
 						access_token: {
 							required: true
