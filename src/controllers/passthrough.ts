@@ -36,9 +36,22 @@ const checkPost = async (requestSet: any) => {
 
 const checkGet = async (requestSet: any) => {
 	const promise = new Promise<any>((resolve, reject) => {
-		const requestEndpoint = base+requestSet.endpoint+'?access_token='+requestSet.access_token;
+		let requestEndpoint = base+requestSet.endpoint;
+		let c = 0;
+		for (var key in requestSet) {
+		    if (requestSet.hasOwnProperty(key) && key !== 'endpoint') {
+				if (c>0){
+					requestEndpoint += '&';
+				} else {
+					requestEndpoint += '?';
+				}
+		   		requestEndpoint += key+'='+requestSet[key];
+				c++;
+		    }
+		}
+		console.log(requestEndpoint);
 		request.get(
-			{ url: base, json: true },
+			{ url: requestEndpoint, json: true },
 			(error: any, response: RequestResponse, body: any) => {
 				// console.log(error);
 				// console.log(response);
@@ -59,7 +72,8 @@ const checkGet = async (requestSet: any) => {
  */
 export let getApi = async (req: Request, res: Response) => {
 	res.setHeader('Content-Type', 'application/json');
-	const validRequestSet = validate(req.query);
+	//const validRequestSet = validate(req.query);
+	const validRequestSet = req.query;
 	console.log(validRequestSet);
 	res.json(await checkGet(validRequestSet));
 };

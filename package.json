@@ -63,6 +63,7 @@
 		"@types/request": "^2.0.8",
 		"async": "^2.6.0",
 		"body-parser": "^1.18.2",
+		"dotenv": "^4.0.0",
 		"express": "^4.16.2",
 		"express-validator": "^4.3.0",
 		"morgan": "^1.9.0",

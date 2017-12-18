@@ -16,7 +16,7 @@ export let getApi = (req: Request, res: Response) => {
 		_links: {
 			self: '/',
 			routes: {
-				'/passthrough': {
+				'passthrough': {
 					methods: ['GET', 'POST'],
 					description: 'Neutral endpoint that will pass your requests to the Facebook API',
 					args: {
@@ -30,6 +30,16 @@ export let getApi = (req: Request, res: Response) => {
 							required: true,
 							default: 'json'
 						}
+					}
+				},
+				'post_link_to_facebook': {
+					methods: ['POST'],
+					description: 'Post a link to Facebook',
+					message: {
+						required: true
+					},
+					link: {
+						required: true
 					}
 				}
 			}
