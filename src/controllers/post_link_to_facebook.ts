@@ -18,6 +18,24 @@ const validate = (requestSet: any) => {
 	}
 	return requestSet;
 }
+// https://stackoverflow.com/questions/32828415/how-to-run-multiple-async-functions-then-execute-callback
+const createPost = (requestEndpoint: string, formData: any) => {
+	return new Promise<any>(function(resolve, reject) {
+		request.post(
+			{ url: requestEndpoint, json: true, form: requestSet },
+			(error: any, response: RequestResponse, body: any) => {
+				// console.log(error);
+				// console.log(response);
+				// console.log(response);
+				// console.log(response.statusCode); // 200
+				// console.log(response.headers['content-type']); // 'image/png'
+				//console.log(response);
+				//resolve({'foo': 'bar'});
+				return resolve(body);
+			}
+		);
+	});
+}
 
 const base = 'https://graph.facebook.com/v2.11/';
 const checkPost = async (requestSet: any) => {
