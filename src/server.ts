@@ -31,6 +31,7 @@ app.post('/', apiController.getApi);
 app.get('/auth', authController.getApi);
 app.post('/auth', authController.postApi);
 app.post('/post_link_to_facebook', pushPostController.postApi);
+app.post('/post_links_to_facebook', pushPostController.postMultipleApi);
 app.post('/passthrough', passthroughController.postApi);
 app.get('/passthrough', passthroughController.getApi);
 const server = app.listen(app.get('port'), () => {

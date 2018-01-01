@@ -25,7 +25,7 @@ const postToFacebook = (account: FacebookInterfaces.Account, requestSet: any) =>
 	const primaryEndpoint: string = account.primary_endpoint;
 	const accessToken: string = account.access_token;
 	const requestEndpoint = base + primaryEndpoint + '?access_token=' + accessToken;
-	console.log(requestEndpoint);
+	// console.log(requestEndpoint);
 
 	return new Promise((resolve, reject) => {
 		request.post(
@@ -45,13 +45,13 @@ const postToFacebook = (account: FacebookInterfaces.Account, requestSet: any) =>
 };
 
 // https://stackoverflow.com/questions/32828415/how-to-run-multiple-async-functions-then-execute-callback
-const createPosts = (requestEndpoint: string, requestSet: any) => {
+const createPosts = (requestSet: any) => {
 	// if ( "development" === process.env.environment ){
 	const accountsConfig: any = require('../../config/accounts.json');
-	accounts = accountsConfig.accounts;
+	// accounts = accountsConfig.accounts;
 	// console.log('devCheck', accounts);
 	// }
-	accounts.forEach((account) => {
+	accountsConfig.accounts.forEach((account: FacebookInterfaces.Account) => {
 		accounts.push(postToFacebook(account, requestSet));
 	});
 	return Promise.all(accounts)
@@ -95,6 +95,19 @@ export let postApi = async (req: Request, res: Response) => {
 	res.setHeader('Content-Type', 'application/json');
 	console.log(validRequestSet);
 	const response = await createAPost(validRequestSet);
+	// console.log(response);
+	res.json(response);
+};
+
+export let postMultipleApi = async (req: Request, res: Response) => {
+	console.log(accounts);
+	const validRequestSet = validate(req.body);
+	if (false === validRequestSet) {
+		return errorIs(res, 501, 'invalidInput');
+	}
+	res.setHeader('Content-Type', 'application/json');
+	console.log(validRequestSet);
+	const response = await createPosts(validRequestSet);
 	// console.log(response);
 	res.json(response);
 };
