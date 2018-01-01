@@ -11,7 +11,7 @@ import * as request from 'request';
 export let getApi = (req: Request, res: Response) => {
 	res.setHeader('Content-Type', 'application/json');
 	res.json({
-		application_name: 'TruthAtHome',
+		name: 'TruthAtHome',
 		description: 'Robots using your Facebook wall for good.',
 		_links: {
 			self: '/',

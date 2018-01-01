@@ -7,20 +7,27 @@ import { RequestResponse } from 'request';
 
 import { errorIs } from '../utility/error';
 
-let accounts: Array<any> = [];
+let accounts: any[] = [];
+
+const base = 'https://graph.facebook.com/v2.11/';
 
 const validate = (requestSet: any) => {
-	if (!requestSet.hasOwnProperty('message')){
+	if (!requestSet.hasOwnProperty('message')) {
 		return false;
 	}
-	if (!requestSet.hasOwnProperty('link')){
+	if (!requestSet.hasOwnProperty('link')) {
 		return false;
 	}
 	return requestSet;
-}
-// https://stackoverflow.com/questions/32828415/how-to-run-multiple-async-functions-then-execute-callback
-const createPost = (requestEndpoint: string, formData: any) => {
-	return new Promise<any>(function(resolve, reject) {
+};
+
+const postToFacebook = (account: FacebookInterfaces.Account, requestSet: any) => {
+	const primaryEndpoint: string = account.primary_endpoint;
+	const accessToken: string = account.access_token;
+	const requestEndpoint = base + primaryEndpoint + '?access_token=' + accessToken;
+	console.log(requestEndpoint);
+
+	return new Promise((resolve, reject) => {
 		request.post(
 			{ url: requestEndpoint, json: true, form: requestSet },
 			(error: any, response: RequestResponse, body: any) => {
@@ -29,27 +36,38 @@ const createPost = (requestEndpoint: string, formData: any) => {
 				// console.log(response);
 				// console.log(response.statusCode); // 200
 				// console.log(response.headers['content-type']); // 'image/png'
-				//console.log(response);
-				//resolve({'foo': 'bar'});
+				// console.log(response);
+				// resolve({'foo': 'bar'});
 				return resolve(body);
 			}
 		);
 	});
-}
+};
 
-const base = 'https://graph.facebook.com/v2.11/';
-const checkPost = async (requestSet: any) => {
+// https://stackoverflow.com/questions/32828415/how-to-run-multiple-async-functions-then-execute-callback
+const createPosts = (requestEndpoint: string, requestSet: any) => {
+	// if ( "development" === process.env.environment ){
+	const accountsConfig: any = require('../../config/accounts.json');
+	accounts = accountsConfig.accounts;
+	// console.log('devCheck', accounts);
+	// }
+	accounts.forEach((account) => {
+		accounts.push(postToFacebook(account, requestSet));
+	});
+	return Promise.all(accounts)
+		.then((allData) => {
+			return allData;
+		});
+};
+
+const createAPost = async (requestSet: any) => {
 	const promise = new Promise<any>((resolve, reject) => {
-		//if ( "development" === process.env.environment ){
-			let accounts_config: any = require( '../../config/accounts.json' );
-			accounts = accounts_config.accounts;
-		//	console.log('devCheck', accounts);
-		//}
-
-		const primary_account: any = accounts[0];
-		const primary_endpoint: string = primary_account.primary_endpoint;
-		const access_token: string = primary_account.access_token;
-		const requestEndpoint = base+primary_endpoint+'?access_token='+access_token;
+		const accountsConfig: any = require('../../config/accounts.json');
+		accounts = accountsConfig.accounts;
+		const primaryAccount: any = accounts[0];
+		const primaryEndpoint: string = primaryAccount.primary_endpoint;
+		const accessToken: string = primaryAccount.access_token;
+		const requestEndpoint = base + primaryEndpoint + '?access_token=' + accessToken;
 		console.log(requestEndpoint);
 		request.post(
 			{ url: requestEndpoint, json: true, form: requestSet },
@@ -59,8 +77,8 @@ const checkPost = async (requestSet: any) => {
 				// console.log(response);
 				// console.log(response.statusCode); // 200
 				// console.log(response.headers['content-type']); // 'image/png'
-				//console.log(response);
-				//resolve({'foo': 'bar'});
+				// console.log(response);
+				// resolve({'foo': 'bar'});
 				resolve(body);
 			}
 		);
@@ -71,12 +89,12 @@ const checkPost = async (requestSet: any) => {
 export let postApi = async (req: Request, res: Response) => {
 	console.log(accounts);
 	const validRequestSet = validate(req.body);
-	if (false === validRequestSet){
+	if (false === validRequestSet) {
 		return errorIs(res, 501, 'invalidInput');
 	}
 	res.setHeader('Content-Type', 'application/json');
 	console.log(validRequestSet);
-	const response = await checkPost(validRequestSet);
-	//console.log(response);
+	const response = await createAPost(validRequestSet);
+	// console.log(response);
 	res.json(response);
 };

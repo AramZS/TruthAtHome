@@ -7,10 +7,12 @@ import expressValidator = require('express-validator');
 
 import * as apiController from './controllers/api';
 import * as authController from './controllers/auth';
-import * as pushPostController from './controllers/post_link_to_facebook';
 import * as passthroughController from './controllers/passthrough';
+import * as pushPostController from './controllers/post_link_to_facebook';
 
-require('dotenv').load();
+import * as dotenv from 'dotenv';
+
+dotenv.load();
 
 /**
  * Create Express server.
@@ -31,7 +33,7 @@ app.post('/auth', authController.postApi);
 app.post('/post_link_to_facebook', pushPostController.postApi);
 app.post('/passthrough', passthroughController.postApi);
 app.get('/passthrough', passthroughController.getApi);
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
 	console.log(
 		'  App is running at http://localhost:%d in %s mode',
 		app.get('port'),
@@ -40,4 +42,6 @@ app.listen(app.get('port'), () => {
 	console.log('  Press CTRL-C to stop\n');
 });
 
-module.exports = app;
+export {
+	server, app
+};

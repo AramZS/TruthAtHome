@@ -1,12 +1,14 @@
-import {} from 'jest';
+import { } from 'jest';
 import * as supertest from 'supertest';
+import { app, server } from '../src/server';
 
 const port = process.env.PORT || 3010;
-const request = supertest('http://localhost:' + port);
+
+const request = supertest(app);
 
 describe('GET /', () => {
 	it('should return 200 OK', (done) => {
-		request
+		return request
 			.get('/')
 			.expect(200)
 			.end((err, res) => {
@@ -16,7 +18,9 @@ describe('GET /', () => {
 				done();
 			});
 
-		request
+	});
+	it('should return 404 OK', (done) => {
+		return request
 			.get('/foobar')
 			.expect(404)
 			.end((err, res) => {
@@ -26,11 +30,8 @@ describe('GET /', () => {
 				done();
 			});
 	});
-});
-
-describe('GET /', () => {
 	it('should return JSON', (done) => {
-		request
+		return request
 			.get('/')
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -41,21 +42,22 @@ describe('GET /', () => {
 				done();
 			});
 	});
-});
-
-describe('GET /', () => {
-	it('should return a HAL description of API', (done) => {
-		const promise = request
+	it('should return a HAL description of API', async (done) => {
+		expect.assertions(4);
+		const response = await request
 			.get('/')
 			.expect(200)
 			.expect('Content-Type', /json/);
-		return promise.then((response) => {
-			expect(response).toBeDefined();
-			// console.log(response.body);
-			expect(response.body.application_name).toBe('TruthAtHome');
-			expect(response.body._links.self).not.toBe('/foobar');
-			expect(response.body._links.self).toBe('/');
-			done();
-		});
+
+		expect(response).toBeDefined();
+		// console.log(response.body, b);
+		expect(response.body.name).toBe('TruthAtHome');
+		expect(response.body._links.self).not.toBe('/foobar');
+		expect(response.body._links.self).toBe('/');
+		done();
+		return response;
+		// .done();
 	});
+
+	server.close();
 });
