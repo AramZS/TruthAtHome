@@ -8,7 +8,7 @@ import { RequestResponse } from 'request';
 import { errorIs } from '../utility/error';
 
 const validate = (requestSet: any) => {
-	if (!requestSet.hasOwnProperty('access_token')){
+	if (!requestSet.hasOwnProperty('access_token')) {
 		return false;
 	}
 	return requestSet;
@@ -18,11 +18,11 @@ const base = 'https://graph.facebook.com/v2.11/';
 // https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension
 const checkGet = async (requestSet: any) => {
 	const promise = new Promise<any>((resolve, reject) => {
-		let requestEndpoint = base+'oauth/access_token?grant_type=fb_exchange_token';
-		requestEndpoint += '&client_id='+process.env.client_id;
-		requestEndpoint += '&client_secret='+process.env.client_secret;
-		requestEndpoint += '&fb_exchange_token='+requestSet.access_token;
-		requestEndpoint += '&access_token='+requestSet.access_token;
+		let requestEndpoint = base + 'oauth/access_token?grant_type=fb_exchange_token';
+		requestEndpoint += '&client_id=' + process.env.client_id;
+		requestEndpoint += '&client_secret=' + process.env.client_secret;
+		requestEndpoint += '&fb_exchange_token=' + requestSet.access_token;
+		requestEndpoint += '&access_token=' + requestSet.access_token;
 		console.log(requestEndpoint);
 		request.get(
 			{ url: requestEndpoint, json: true },
@@ -47,7 +47,7 @@ const checkGet = async (requestSet: any) => {
 export let getApi = async (req: Request, res: Response) => {
 	res.setHeader('Content-Type', 'application/json');
 	const validRequestSet = validate(req.query);
-	if (!validRequestSet){
+	if (!validRequestSet) {
 		return errorIs(res, 501, 'invalidInput');
 	}
 	console.log(validRequestSet);
