@@ -23,6 +23,7 @@
 	<meta property="og:url" content="http://aramzs.github.io/ad-tech/2017/08/17/Notes-From-Destructive-Ad-Tech-and-Practical-Solutions.html"
 	/>
 	<meta property="og:locale" content="en_US" />
+	<meta property="fb:app_id" content="497425030640094">
 	<meta name="twitter:site" content="@chronotope" />
 	<meta name="twitter:description" content="Robots are taking over your Facebook feed, using it for evil. Fight fire with fire. Allow this robot to post to your wall
 	for good." />
@@ -53,10 +54,45 @@
 		ga('send', 'pageview');
 
 	</script>
+	<script>
+		window.fbAsyncInit = function () {
+			FB.init({
+				appId: '497425030640094',
+				cookie: true,
+				xfbml: true,
+				version: 'v2.11'
+			});
+
+			FB.AppEvents.logPageView();
+
+		};
+
+		(function (d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) { return; }
+			js = d.createElement(s); js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+		function fbLoginTrigger() {
+			FB.getLoginStatus(function (response) {
+				if (response.status === 'connected') {
+					console.log('Logged in.');
+				}
+				else {
+					FB.login();
+				}
+			});
+		}
+
+	</script>
 </head>
 
 <body>
-	Start
+	<button type="button" onclick="fbLoginTrigger()">Login</button>
+	<fb:login-button scope="public_profile,email" onlogin="fbLoginTrigger();">
+	</fb:login-button>
 </body>
 
 </html>
