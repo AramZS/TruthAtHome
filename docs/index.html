@@ -81,7 +81,9 @@
 					console.log('Logged in.');
 				}
 				else {
-					FB.login();
+					FB.login(function (response) {
+						// handle the response
+					}, { scope: 'public_profile,publish_actions' });
 				}
 			});
 		}
@@ -90,9 +92,9 @@
 </head>
 
 <body>
-	<button type="button" onclick="fbLoginTrigger()">Login</button>
-	<fb:login-button scope="public_profile,email" onlogin="fbLoginTrigger();">
-	</fb:login-button>
+	<button type="button" onclick="fbLoginTrigger();">Login</button>
+	<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false"
+	 data-use-continue-as="false" scope="public_profile,email" onlogin="fbLoginTrigger();"></div>
 </body>
 
 </html>

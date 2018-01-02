@@ -12,12 +12,10 @@ const validate = (requestSet: any) => {
 		return false;
 	}
 	return requestSet;
-}
+};
 
-const base = 'https://graph.facebook.com/v2.11/';
-// https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension
-const checkGet = async (requestSet: any) => {
-	const promise = new Promise<any>((resolve, reject) => {
+const generateLongLivedTokenFromShortLived = async (requestSet: any) => {
+	return new Promise<any>((resolve, reject) => {
 		let requestEndpoint = base + 'oauth/access_token?grant_type=fb_exchange_token';
 		requestEndpoint += '&client_id=' + process.env.client_id;
 		requestEndpoint += '&client_secret=' + process.env.client_secret;
@@ -37,6 +35,12 @@ const checkGet = async (requestSet: any) => {
 			}
 		);
 	});
+};
+
+const base = 'https://graph.facebook.com/v2.11/';
+// https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension
+const checkGet = async (requestSet: any) => {
+	const promise = await generateLongLivedTokenFromShortLived(requestSet);
 	return promise;
 };
 

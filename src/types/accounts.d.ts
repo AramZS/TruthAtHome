@@ -4,5 +4,6 @@ export interface Account {
 	name: string,
 	access_token: string,
 	id: string,
-	primary_endpoint: string
+	primary_endpoint: string,
+	topics: string[]
 }
